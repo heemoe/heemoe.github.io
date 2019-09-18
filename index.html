@@ -134,9 +134,18 @@
         var canvas, ctx, p = function (x, y) {
             return { x: x, y: y };
         };
+        
+        function getRandomColor() {
+  var letters = '0123456789ABCDEF';
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
 
         // drawing
-        var canvasReady = function () {
+        var canvasReady = function (color) {
             canvas = document.getElementById("canvas");
             ctx = canvas.getContext('2d');
             ctx.canvas.width = window.innerWidth;
@@ -144,10 +153,7 @@
 
             ctx.lineCap = 'round';
             ctx.lineWidth = 4;
-
-            console.log(1)
-            // ctx.setLineDash([6, 12]);
-            ctx.strokeStyle = '#000';
+            ctx.strokeStyle = color ? color : '#333';
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.wavy(p(0, window.innerHeight * 0.7), p(window.innerWidth, window.innerHeight * 0.7), 8, 22, 4, true);
@@ -157,28 +163,33 @@
             ctx.wavy(p(0, window.innerHeight * 0.9), p(window.innerWidth, window.innerHeight * 0.9), 8, 14, 4, false);
             ctx.wavy(p(0, window.innerHeight * 0.95), p(window.innerWidth, window.innerHeight * 0.95), 11, 16, 4, true);
             ctx.stroke();
-        };
 
-
-
-        CanvasRenderingContext2D.prototype.wavy = function (from, to, frequency, amplitude, step, negative) {
-            var cx = 0, cy = 0,
-                fx = from.x, fy = from.y,
-                tx = to.x, ty = to.y,
-                i = 0, waveOffsetLength = 0,
-
-                ang = Math.atan2(ty - fy, tx - fx),
-                distance = Math.sqrt((fx - tx) * (fx - tx) + (fy - ty) * (fy - ty)),
-                a = amplitude * (!negative ? 1 : -1),
-                f = Math.PI * frequency;
-
-            for (i; i <= distance; i += step) {
-                waveOffsetLength = Math.sin((i / distance) * f) * a;
-                cx = from.x + Math.cos(ang) * i + Math.cos(ang - Math.PI / 2) * waveOffsetLength;
-                cy = from.y + Math.sin(ang) * i + Math.sin(ang - Math.PI / 2) * waveOffsetLength;
-                i > 0 ? this.lineTo(cx, cy) : this.moveTo(cx, cy);
-            }
+            //event mousehover
+            canvas.addEventListener("dblclick", function (e) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                canvasReady(getRandomColor())
+            })
         }
+
+
+            CanvasRenderingContext2D.prototype.wavy = function (from, to, frequency, amplitude, step, negative) {
+                var cx = 0, cy = 0,
+                    fx = from.x, fy = from.y,
+                    tx = to.x, ty = to.y,
+                    i = 0, waveOffsetLength = 0,
+
+                    ang = Math.atan2(ty - fy, tx - fx),
+                    distance = Math.sqrt((fx - tx) * (fx - tx) + (fy - ty) * (fy - ty)),
+                    a = amplitude * (!negative ? 1 : -1),
+                    f = Math.PI * frequency;
+
+                for (i; i <= distance; i += step) {
+                    waveOffsetLength = Math.sin((i / distance) * f) * a;
+                    cx = from.x + Math.cos(ang) * i + Math.cos(ang - Math.PI / 2) * waveOffsetLength;
+                    cy = from.y + Math.sin(ang) * i + Math.sin(ang - Math.PI / 2) * waveOffsetLength;
+                    i > 0 ? this.lineTo(cx, cy) : this.moveTo(cx, cy);
+                }
+            }
     </script>
 </body>
 
