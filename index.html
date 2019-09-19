@@ -28,7 +28,7 @@
 
         .contents {
             position: absolute;
-            top: 30%;
+            top: 20%;
             right: 0px;
             width: 100%;
         }
@@ -72,19 +72,36 @@
         }
 
         .a2 {
-            background-color: #a9cbb7;
-        }
-
-        .a3 {
             background-color: #5e565a;
         }
 
+        .a3 {
+            background-color: #a9cbb7;
+        }
+
         .a4 {
+            background-color: #409EFF;
+        }
+
+        .a5 {
             background-color: #ff934f;
         }
 
         .bottom {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
             text-align: center;
+        }
+
+        .gif {
+            width: 50px;
+            height: auto;
+            position: absolute;
+            left: calc(50% - 25px);
+            margin-top: 20px;
+            z-index: 10;
+            visibility: hidden;
         }
 
         a {
@@ -126,26 +143,34 @@
                 <a class="a3 waves-effect waves-light styles"
                     href="https://telegram.me/heeeeeeeeeeeeeeeeeeeeeeeee">Telegram</a>
                 <a class="a4 waves-effect waves-light styles" href="https://twitter.com/heeweez">Twitter</a>
+                <a class="a5 waves-effect waves-light styles" href="https://www.instagram.com/heeig/">Instagram</a>
             </div>
+            <img class="gif" src="./copy.gif" alt="">
         </div>
     </div>
     <script>
+        $('.bio').click(function () {
+            $('.gif').css('visibility', 'visible');
+        })
+
         var canvas = document.getElementById("canvas");
         var canvas, ctx, p = function (x, y) {
             return { x: x, y: y };
         };
-        
-        function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
 
+        function getRandomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        var tapped = 0
         // drawing
         var canvasReady = function (color) {
+
             canvas = document.getElementById("canvas");
             ctx = canvas.getContext('2d');
             ctx.canvas.width = window.innerWidth;
@@ -164,32 +189,45 @@
             ctx.wavy(p(0, window.innerHeight * 0.95), p(window.innerWidth, window.innerHeight * 0.95), 11, 16, 4, true);
             ctx.stroke();
 
-            //event mousehover
             canvas.addEventListener("dblclick", function (e) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 canvasReady(getRandomColor())
             })
+
+            canvas.addEventListener("touchend", function (e) {
+                if (tapped >= 3) {
+                    setTimeout(() => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        canvasReady(getRandomColor())
+                    }, 1000);
+                }else {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    canvasReady(getRandomColor())
+                }
+                
+                tapped++
+            })
         }
 
 
-            CanvasRenderingContext2D.prototype.wavy = function (from, to, frequency, amplitude, step, negative) {
-                var cx = 0, cy = 0,
-                    fx = from.x, fy = from.y,
-                    tx = to.x, ty = to.y,
-                    i = 0, waveOffsetLength = 0,
+        CanvasRenderingContext2D.prototype.wavy = function (from, to, frequency, amplitude, step, negative) {
+            var cx = 0, cy = 0,
+                fx = from.x, fy = from.y,
+                tx = to.x, ty = to.y,
+                i = 0, waveOffsetLength = 0,
 
-                    ang = Math.atan2(ty - fy, tx - fx),
-                    distance = Math.sqrt((fx - tx) * (fx - tx) + (fy - ty) * (fy - ty)),
-                    a = amplitude * (!negative ? 1 : -1),
-                    f = Math.PI * frequency;
+                ang = Math.atan2(ty - fy, tx - fx),
+                distance = Math.sqrt((fx - tx) * (fx - tx) + (fy - ty) * (fy - ty)),
+                a = amplitude * (!negative ? 1 : -1),
+                f = Math.PI * frequency;
 
-                for (i; i <= distance; i += step) {
-                    waveOffsetLength = Math.sin((i / distance) * f) * a;
-                    cx = from.x + Math.cos(ang) * i + Math.cos(ang - Math.PI / 2) * waveOffsetLength;
-                    cy = from.y + Math.sin(ang) * i + Math.sin(ang - Math.PI / 2) * waveOffsetLength;
-                    i > 0 ? this.lineTo(cx, cy) : this.moveTo(cx, cy);
-                }
+            for (i; i <= distance; i += step) {
+                waveOffsetLength = Math.sin((i / distance) * f) * a;
+                cx = from.x + Math.cos(ang) * i + Math.cos(ang - Math.PI / 2) * waveOffsetLength;
+                cy = from.y + Math.sin(ang) * i + Math.sin(ang - Math.PI / 2) * waveOffsetLength;
+                i > 0 ? this.lineTo(cx, cy) : this.moveTo(cx, cy);
             }
+        }
     </script>
 </body>
 
