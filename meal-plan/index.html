@@ -1,77 +1,92 @@
 <!doctype html>
-<html lang="zh">
+<html lang='zh-CN'>
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>地中海饮食一周食谱（孕妇版）</title>
-<style>
-:root{
-  --bg:#fafafa;
-  --card:#ffffff;
-  --text:#111;
-  --muted:#666;
-  --line:#eaeaea;
-  --soft:#f5f5f5;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Geist", "PingFang SC";
-}
-body{margin:0;background:var(--bg);color:var(--text);}
-.app{display:grid;grid-template-columns:280px 1fr 380px;height:100vh;}
-.sidebar{border-right:1px solid var(--line);padding:16px;overflow:auto;background:#fff;}
-.logo{font-weight:700;font-size:14px;margin-bottom:16px;}
-.section{margin-bottom:18px;}
-.section h3{font-size:12px;color:var(--muted);margin:12px 0 8px;}
-.item{padding:8px 10px;border-radius:10px;cursor:pointer;font-size:13px;display:flex;justify-content:space-between;}
-.item:hover{background:var(--soft);}
-.main{padding:24px;overflow:auto;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;cursor:pointer;}
-.card:hover{box-shadow:0 8px 30px rgba(0,0,0,.06);}
-.title{font-weight:600;font-size:14px;}
-.sub{font-size:12px;color:var(--muted);margin-top:6px;}
-.panel{border-left:1px solid var(--line);background:#fff;padding:18px;overflow:auto;}
-.badge{font-size:11px;background:var(--soft);padding:4px 8px;border-radius:999px;display:inline-block;margin-bottom:10px;}
-.step{font-size:13px;margin:6px 0;line-height:1.6;}
-@media(max-width:1100px){.app{grid-template-columns:1fr}.panel{display:none}}
-</style>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1, viewport-fit=cover'>
+  <meta name='theme-color' content='#fafafa'>
+  <title>地中海饮食一周食谱｜孕妇 + 爸爸</title>
+  <link rel='stylesheet' href='./styles.css'>
 </head>
 <body>
-<div class="app">
-<aside class="sidebar">
-<div class="logo">🥗 地中海食谱</div>
-<div class="section">
-<h3>🛒 买菜清单</h3>
-<div class="item">鸡肉/鸡胸 <span>1.2kg</span></div>
-<div class="item">牛肉 <span>450g</span></div>
-<div class="item">鱼 <span>600g</span></div>
-<div class="item">番茄 <span>8</span></div>
-<div class="item">土豆 <span>2kg</span></div>
-<div class="item">西兰花 <span>2颗</span></div>
-</div>
-<div class="section">
-<h3>🥬 补货</h3>
-<div class="item">绿叶菜</div>
-<div class="item">豆腐</div>
-</div>
-</aside>
-<main class="main">
-<h2>点击菜谱查看做法</h2>
-<div class="grid" id="grid"></div>
-</main>
-<aside class="panel" id="panel">请选择菜</aside>
-</div>
-<script>
-const recipes=[
-{t:"番茄鸡胸鹰嘴豆",s:["鸡胸切块+腌制","炒蒜+鸡肉","加番茄炒汁","加豆类煮熟"]},
-{t:"柠檬蒜香鱼锅",s:["土豆先煮","鱼煎/焖","加柠檬汁","调味"]},
-{t:"鸡肉土豆焖锅",s:["鸡肉炒白","加土豆","加水焖10分钟","收汁"]},
-{t:"虾仁番茄意面",s:["煮意面","番茄炒汁","虾仁煮熟","混合翻炒"]},
-{t:"牛肉番茄豆锅",s:["牛肉炒变色","番茄炒汁","加豆类","煮5分钟"]}
-];
-const grid=document.getElementById('grid');
-const panel=document.getElementById('panel');
-function render(){recipes.forEach((r,i)=>{const d=document.createElement('div');d.className='card';d.innerHTML=`<div class='title'>${r.t}</div><div class='sub'>点击查看</div>`;d.onclick=()=>show(i);grid.appendChild(d);});}
-function show(i){const r=recipes[i];panel.innerHTML=`<div class='badge'>步骤</div><h2>${r.t}</h2>${r.s.map(x=>`<div class='step'>• ${x}</div>`).join('')}`;}
-render();
-</script>
+  <div class='mobile-bar' id='mobileTabs'></div>
+
+  <div class='app-shell'>
+    <aside class='sidebar'>
+      <div class='brand'>
+        <div style='display:flex;gap:10px;align-items:center'>
+          <div class='brand-mark'>🥗</div>
+          <div>
+            <div class='brand-title'>地中海一周食谱</div>
+            <div class='brand-sub'>孕妇 + 爸爸 · 2 人份</div>
+          </div>
+        </div>
+        <span class='pill'>14 顿</span>
+      </div>
+
+      <div class='note' style='margin-bottom:14px'>
+        重点：全熟、少盐、低汞鱼、食材复用。肉、鱼、虾、蛋都要熟透；绿叶菜只买一种即可。
+      </div>
+
+      <input id='mobileSearch' class='search' style='width:100%;margin:0 0 14px' placeholder='搜索菜名 / 食材，例如 番茄、鸡胸、鱼'>
+
+      <div class='section-title'>周末大采购</div>
+      <div id='weekendShopping'></div>
+
+      <div class='section-title'>周三晚 / 周四早补货</div>
+      <div id='midweekShopping'></div>
+
+      <div style='display:flex;gap:8px;flex-wrap:wrap;margin-top:14px'>
+        <button class='btn' id='copyBtn' type='button'>复制买菜清单</button>
+        <button class='btn' id='printBtn' type='button'>打印</button>
+      </div>
+    </aside>
+
+    <main class='main'>
+      <section class='hero'>
+        <div class='hero-card'>
+          <div class='kicker'>Geist-style Meal Planner · Mediterranean</div>
+          <h1>偏地中海饮食的一周午餐晚餐</h1>
+          <p>
+            这是完整的可交互版本：菜单、买菜清单和每道菜的详细用量/步骤都集中在一个页面。点击任意菜谱卡片，桌面端右侧显示详情；手机端从底部弹出详情抽屉。
+          </p>
+          <div class='hero-actions'>
+            <span class='pill'>橄榄油</span>
+            <span class='pill'>番茄</span>
+            <span class='pill'>鱼虾</span>
+            <span class='pill'>鸡肉</span>
+            <span class='pill'>豆类</span>
+            <span class='pill'>全谷物</span>
+          </div>
+        </div>
+      </section>
+
+      <section class='content'>
+        <div class='toolbar'>
+          <div class='tabs' id='desktopTabs'></div>
+          <input id='search' class='search' placeholder='搜索菜名 / 食材，例如 番茄、鸡胸、鱼'>
+        </div>
+
+        <div class='section-title'>一周菜单 · 点击查看做法</div>
+        <div id='recipeList'></div>
+      </section>
+    </main>
+
+    <aside class='panel'>
+      <div id='detail' class='panel-empty'>
+        <div>
+          <div style='font-size:28px'>🍽️</div>
+          <p>请选择一道菜查看详细步骤</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <div id='scrim' class='scrim'></div>
+  <aside id='drawer' class='drawer'>
+    <button id='closeDrawer' class='drawer-close' type='button'>×</button>
+    <div id='drawerBody'></div>
+  </aside>
+
+  <script src='./app.js'></script>
 </body>
 </html>
